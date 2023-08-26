@@ -9,6 +9,7 @@ const app = express();
 
 const logger = require('./middleware/logger')
 const genres = require("./routes/genres");
+const customers = require('./routes/customers')
 const hompage = require("./routes/home");
 
 const username = process.env.USERNAME
@@ -43,6 +44,7 @@ app.use(function (req, res, next) {
 
 app.use('/', hompage)
 app.use("/api/genres", genres);
+app.use('/api/customers', customers)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
