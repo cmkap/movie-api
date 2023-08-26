@@ -7,11 +7,9 @@ const helmet = require("helmet");
 const app = express();
  const mongoose = require('mongoose')
 
-
 const logger = require('./middleware/logger')
 const genres = require("./routes/genres");
 const hompage = require("./routes/home");
-
 
 const username = process.env.USERNAME
 const password = process.env.SECRET_KEY
@@ -19,8 +17,10 @@ const password = process.env.SECRET_KEY
 const uri = `mongodb+srv://${username}:${password}@cluster0.xe4jeek.mongodb.net/?retryWrites=true&w=majority`
 
 mongoose.connect(uri)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(debug('Connected to MongoDB'))
   .catch((error) => console.error('Error: ', error))
+
+
 
 app.set("view engine", "pug");
 
@@ -44,8 +44,7 @@ app.use(function (req, res, next) {
 app.use('/', hompage)
 app.use("/api/genres", genres);
 
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`listening on port ${port}`);
+  debug(`Listening on port ${port}`);
 });
