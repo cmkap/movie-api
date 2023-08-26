@@ -1,11 +1,11 @@
 require('dotenv').config()
-// console.log(process.env) // remove this
+
+const mongoose = require('mongoose')
 const debug = require("debug")("app:startup");
 const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const app = express();
- const mongoose = require('mongoose')
 
 const logger = require('./middleware/logger')
 const genres = require("./routes/genres");
@@ -14,7 +14,7 @@ const hompage = require("./routes/home");
 const username = process.env.USERNAME
 const password = process.env.SECRET_KEY
 
-const uri = `mongodb+srv://${username}:${password}@cluster0.xe4jeek.mongodb.net/?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${username}:${password}@cluster0.xe4jeek.mongodb.net/movie?retryWrites=true&w=majority`
 
 mongoose.connect(uri)
   .then(debug('Connected to MongoDB'))

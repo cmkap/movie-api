@@ -1,60 +1,82 @@
-const express = require('express');
-const router = express.Router()
-
+const express = require("express");
+const router = express.Router();
 const Joi = require("joi");
 
-const genres = require("../data/Genres");
+const Genre = require("../model/Genre");
 
 const schema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
 });
 
 router.get("/", (req, res) => {
-  res.send(genres);
+  Genre.find({})
+    .sort("name")
+    .select("name")
+    .then((genres) => res.status(200).send(genres))
+    .catch((err) => console.error(err));
 });
 
 router.post("/", (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  const genre = {
-    id: genres.length + 1,
-    name: value,
-  };
+  const genre = new Genre({ name: value.name });
 
-  genres.push(genre);
-  res.status(201).send(genre);
+  genre
+    .save()
+    .then(res.status(201).send(genre))
+    .catch((err) => console.error(err));
 });
 
-router.put("/:id", (req, res) => {
-  const updateGenre = req.body;
-  const genre = genres.find((g) => g.id === parseInt(updateGenre.id));
-  if (!genre) return res.status(404).send("Genre does not exist");
+router.put("/:id", async (req, res) => {
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).send(error.message);
 
-  genre.name = updateGenre.name;
+  const _id = req.params.id;
+  const genreUpdate = req.body.name;
 
-  return res.status(201).send(genre);
+  try {
+    const genre = await Genre.findByIdAndUpdate(
+      _id,
+      { name: genreUpdate },
+      { new: true }
+    );
+    if (!genre) return res.status(404).send("Genre not found");
+
+    return res.status(200).send(genre);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal server error");
+  }
 });
 
-router.delete("/:id", (req, res) => {
-  const genreId = parseInt(req.params.id);
-  const genre = genres.find((g) => g.id === genreId);
-  if (!genre) return res.status(404).send("Genre does not exist");
+router.delete("/:id", async (req, res) => {
+  const _id = req.params.id;
 
-  const index = genres.indexOf(genre);
+  try {
+    const genre = await Genre.findByIdAndRemove(_id);
+    if (!genre) return res.status(404).send("Genre not found");
 
-  genres.splice(index, 1);
 
-  return res.status(201).send(genre);
+    return res.status(200).send(genre);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal server error");
+  }
 });
 
-router.get("/:id", (req, res) => {
-  const genre = genres.find((g) => g.id === parseInt(req.params.id));
-  if (!genre)
-    return res.status(404).send("The genre with the given ID was not found.");
-  res.send(genre);
+router.get("/:id", async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const genre = await Genre.findById(_id);
+    if (!genre)
+      return res.status(404).send("The genre with the given ID was not found.");
+    return res.status(200).send(genre);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send("Internal server error");
+  }
 });
-
-
 
 module.exports = router;
