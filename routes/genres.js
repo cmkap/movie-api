@@ -1,13 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Joi = require("joi");
 
-const Genre = require("../model/Genre");
-
-const schema = Joi.object({
-  name: Joi.string().min(3).max(30).required(),
-});
-
+const { Genre, schema } = require("../model/genre");
 
 
 router.get("/", (req, res) => {

@@ -1,14 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Joi = require("joi");
 
-const schema = Joi.object({
-  isGold: Joi.boolean(),
-  name: Joi.string().min(1).max(50).required(),
-  phone: Joi.number().integer().required(),
-});
-
-const Customer = require("../model/Customer");
+const { Customer, schema } = require("../model/customer");
 
 router.get("/", async (req, res) => {
   try {

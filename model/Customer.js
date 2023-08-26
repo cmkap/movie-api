@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const Joi = require("joi");
+
+const schema = Joi.object({
+  isGold: Joi.boolean(),
+  name: Joi.string().min(1).max(50).required(),
+  phone: Joi.number().integer().required(),
+});
+
 
 const Customer = mongoose.model(
   "Customer",
@@ -19,4 +27,4 @@ const Customer = mongoose.model(
   })
 );
 
-module.exports = Customer
+module.exports = { Customer, schema }

@@ -1,5 +1,11 @@
 const mongoose =require('mongoose');
 const { Schema } = mongoose;
+const Joi = require("joi");
+
+
+const schema = Joi.object({
+  name: Joi.string().min(3).max(30).required(),
+});
 
 const genreSchema  = new Schema({
     name: {
@@ -22,4 +28,4 @@ const genreSchema  = new Schema({
 
 const Genre = mongoose.model('Genre', genreSchema)
 
-module.exports = Genre
+module.exports = {Genre, schema}
