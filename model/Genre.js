@@ -28,4 +28,4 @@ const genreSchema  = new Schema({
 
 const Genre = mongoose.model('Genre', genreSchema)
 
-module.exports = {Genre, schema}
+module.exports = {Genre, schema, genreSchema}

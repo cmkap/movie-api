@@ -8,7 +8,6 @@ const schema = Joi.object({
   phone: Joi.number().integer().required(),
 });
 
-
 const Customer = mongoose.model(
   "Customer",
   new Schema({
@@ -22,9 +21,8 @@ const Customer = mongoose.model(
     phone: {
       type: Number,
       required: true,
-    
     },
   })
 );
 
-module.exports = { Customer, schema }
+module.exports = { Customer, schema };
