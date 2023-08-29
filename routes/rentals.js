@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  console.log(value);
+  
   const customer = await Customer.findById(value.customerId);
   if (!customer) return res.status(400).send("Invalid customer.");
 
