@@ -5,7 +5,7 @@ const Joi = require("joi");
 const schema = Joi.object({
   isGold: Joi.boolean(),
   name: Joi.string().min(1).max(50).required(),
-  phone: Joi.number().integer().required(),
+  phone: Joi.string().min(5).max(50).required(),
 });
 
 const Customer = mongoose.model(
@@ -19,8 +19,10 @@ const Customer = mongoose.model(
       maxlength: 50,
     },
     phone: {
-      type: Number,
+      type: String,
       required: true,
+      minlength: 5,
+      maxlength: 50,
     },
   })
 );
