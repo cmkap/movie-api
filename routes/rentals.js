@@ -37,8 +37,6 @@ router.post("/", async (req, res) => {
     },
   });
 
-
-
   try {
     const session = await mongoose.startSession();
     await session.withTransaction(async () => {
