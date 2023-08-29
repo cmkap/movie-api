@@ -1,5 +1,6 @@
 require('dotenv').config()
-
+const Joi = require('joi')
+Joi.objectId = require('joi-objectid')(Joi)
 const mongoose = require('mongoose')
 const debug = require("debug")("app:startup");
 const express = require("express");
