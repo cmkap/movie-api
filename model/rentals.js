@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const { genreSchema } = require("./genre");
 const Joi = require("joi");
+Joi.objectId = require('joi-objectid')(Joi)
 const { Schema } = mongoose;
 
 const schema = Joi.object({
-  customerId: Joi.string().required(),
-  movieId: Joi.string().required(),
+  customerId: Joi.objectId().required(),
+  movieId: Joi.objectId().required(),
 });
 
 const rentalSchema = new Schema({
