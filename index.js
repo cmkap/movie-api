@@ -15,7 +15,8 @@ const customers = require('./routes/customers')
 const movies = require("./routes/movies") 
 const rentals = require("./routes/rentals")
 const users = require("./routes/users")
-const auth = require("./routes/auth")
+const auth = require("./routes/auth");
+const error = require('./middleware/error');
 
 if(!process.env.JWT_PRIVATE_KEY) {
   console.log('FATAL ERROR: jwt private key is not defined')
@@ -58,6 +59,8 @@ app.use('/api/movies', movies)
 app.use('/api/rentals', rentals)
 app.use('/api/users', users)
 app.use('/api/auth', auth)
+
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
