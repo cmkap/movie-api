@@ -30,11 +30,12 @@ const userSchema =  new Schema({
     minlength: 1,
     maxlength: 1024,
   },
+  isAdmin: Boolean
 })
 
 // arrow functions don't have their own this-- arow functions  reference the calling function
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ _id: this._id }, process.env.JWT_PRIVATE_KEY);
+  const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, process.env.JWT_PRIVATE_KEY);
   return token
 }
 

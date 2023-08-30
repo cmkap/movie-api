@@ -1,8 +1,9 @@
-const auth = require("../middleware/auth");
 const express = require("express");
 const router = express.Router();
 
 const { Genre, schema } = require("../model/genre");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 router.get("/", (req, res) => {
   Genre.find({})
@@ -46,7 +47,7 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const _id = req.params.id;
 
   try {
