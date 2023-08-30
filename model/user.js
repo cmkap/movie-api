@@ -9,7 +9,9 @@ const schema = Joi.object({
   password: passwordComplexity().required(),
 });
 
-const User = mongoose.model("User", new Schema({
+const User = mongoose.model(
+  "User",
+  new Schema({
     name: {
       type: String,
       required: true,
@@ -24,15 +26,15 @@ const User = mongoose.model("User", new Schema({
       unique: true,
     },
     password: {
-        type: String,
-        required: true,
-        minlength: 1,
-        maxlength:1024,
-      },
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 1024,
+    },
   })
 );
 
 module.exports = {
-    User,
-    schema
-}
+  User,
+  schema,
+};

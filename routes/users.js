@@ -1,21 +1,23 @@
-const _ = require('lodash')
+const bcrypt = require("bcrypt");
+const _ = require("lodash");
 const express = require("express");
 const { User, schema } = require("../model/user");
 const router = express.Router();
 
-router.post("/", async(req, res) => {
+router.post("/", async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
   let user = await User.findOne({ email: value.email });
-  if(user) return res.status(400).send('Email already exists')
+  if (user) return res.status(400).send("Email already exists");
 
-  user = new User({...value})
-  await user.save()
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(value.password, salt);
 
+  user = new User({ ...value, password: hashedPassword });
+  await user.save();
 
-
-  res.send(_.pick(user, ['_id','name', 'email']))
+  res.send(_.pick(user, ["_id", "name", "email"]));
 });
 
 module.exports = router;

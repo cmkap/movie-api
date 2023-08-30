@@ -9,14 +9,18 @@ const helmet = require("helmet");
 const app = express();
 
 const logger = require('./middleware/logger')
+const hompage = require("./routes/home");
 const genres = require("./routes/genres");
 const customers = require('./routes/customers')
 const movies = require("./routes/movies") 
 const rentals = require("./routes/rentals")
 const users = require("./routes/users")
-const hompage = require("./routes/home");
+const auth = require("./routes/auth")
 
-
+if(!process.env.JWT_PRIVATE_KEY) {
+  console.log('FATAL ERROR: jwt private key is not defined')
+  process.exit(1)
+}
 const username = process.env.USERNAME
 const password = process.env.SECRET_KEY
 
@@ -53,6 +57,7 @@ app.use('/api/customers', customers)
 app.use('/api/movies', movies)
 app.use('/api/rentals', rentals)
 app.use('/api/users', users)
+app.use('/api/auth', auth)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
