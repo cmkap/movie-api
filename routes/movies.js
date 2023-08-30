@@ -1,5 +1,5 @@
 const express = require("express");
-const { Movie, schema } = require("../model/movies");
+const { Movie, schema } = require("../model/movie");
 const { Genre } = require("../model/genre");
 const router = express.Router();
 
@@ -17,24 +17,21 @@ router.post("/", async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  console.log('genre', value)
+  console.log("genre", value);
 
   const genre = await Genre.findById(value.genreId);
-  console.log('returned',genre)
-  if(!genre) return res.status(400).send('Invalid genre')
- 
+  console.log("returned", genre);
+  if (!genre) return res.status(400).send("Invalid genre");
 
   const movie = new Movie({
     title: value.title,
     genre: {
-        _id: genre._id,
-        name: genre.name
+      _id: genre._id,
+      name: genre.name,
     },
     numberInStock: value.numberInStock,
     dailyRentalRate: value.dailyRentalRate,
   });
-
-
 
   try {
     await movie.save();
@@ -50,12 +47,11 @@ router.put("/:id", async (req, res) => {
   if (error) return res.status(400).send(error.message);
 
   const _id = req.params.id;
- 
 
   try {
     const movie = await Movie.findByIdAndUpdate(
       _id,
-      { ...value},
+      { ...value },
       { new: true }
     );
     if (!movie) return res.status(404).send("Movie not found");
@@ -73,7 +69,6 @@ router.delete("/:id", async (req, res) => {
   try {
     const movie = await Movie.findByIdAndRemove(_id);
     if (!movie) return res.status(404).send("Movie not found");
-
 
     return res.status(200).send(movie);
   } catch (error) {

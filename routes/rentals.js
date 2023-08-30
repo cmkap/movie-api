@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const { Rental, schema } = require("../model/rentals");
+const { Rental, schema } = require("../model/rental");
 const { Customer } = require("../model/customer");
-const { Movie } = require("../model/movies");
+const { Movie } = require("../model/movie");
 
 router.get("/", async (req, res) => {
   const rentals = await Rental.find().sort("-dateOut");
@@ -14,7 +14,6 @@ router.post("/", async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  
   const customer = await Customer.findById(value.customerId);
   if (!customer) return res.status(400).send("Invalid customer.");
 
