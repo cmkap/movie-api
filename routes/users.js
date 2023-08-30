@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const express = require("express");
 const { User, schema } = require("../model/user");
 const router = express.Router();
@@ -12,7 +13,9 @@ router.post("/", async(req, res) => {
   user = new User({...value})
   await user.save()
 
-  res.send(user)
+
+
+  res.send(_.pick(user, ['_id','name', 'email']))
 });
 
 module.exports = router;
