@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const passwordComplexity = require("joi-password-complexity");
 const Joi = require("joi");
 const mongoose = require("mongoose");
@@ -9,30 +10,35 @@ const schema = Joi.object({
   password: passwordComplexity().required(),
 });
 
-const User = mongoose.model(
-  "User",
-  new Schema({
-    name: {
-      type: String,
-      required: true,
-      minlength: 1,
-      maxlength: 50,
-    },
-    email: {
-      type: String,
-      required: true,
-      minlength: 5,
-      maxlength: 255,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 1,
-      maxlength: 1024,
-    },
-  })
-);
+const userSchema =  new Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 50,
+  },
+  email: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 1024,
+  },
+})
+
+// arrow functions don't have their own this-- arow functions  reference the calling function
+userSchema.methods.generateAuthToken = function() {
+  const token = jwt.sign({ _id: this._id }, process.env.JWT_PRIVATE_KEY);
+  return token
+}
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = {
   User,
