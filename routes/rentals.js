@@ -1,16 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+
 const { Rental, schema } = require("../model/rental");
 const { Customer } = require("../model/customer");
 const { Movie } = require("../model/movie");
+const auth = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
   const rentals = await Rental.find().sort("-dateOut");
   res.send(rentals);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 

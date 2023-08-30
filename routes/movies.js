@@ -1,7 +1,10 @@
 const express = require("express");
+const router = express.Router();
+
 const { Movie, schema } = require("../model/movie");
 const { Genre } = require("../model/genre");
-const router = express.Router();
+const auth = require("../middleware/auth");
+
 
 router.get("/", async (req, res) => {
   try {
@@ -13,7 +16,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -42,7 +45,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -63,7 +66,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const _id = req.params.id;
 
   try {
