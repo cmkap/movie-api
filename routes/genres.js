@@ -2,17 +2,16 @@ const express = require("express");
 const router = express.Router();
 
 const { Genre, schema } = require("../model/genre");
-const asyncMiddleware = require("../middleware/async")
+
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
 
 
-router.get("/", asyncMiddleware(async (req, res) => {
+router.get("/",async (req, res) => {
     const genres = await Genre.find().sort("name").select("name");
     res.status(200).send(genres);
   })
-);
 
 router.post("/", auth, (req, res, next) => {
   const { value, error } = schema.validate(req.body);
@@ -26,7 +25,7 @@ router.post("/", auth, (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.put("/:id", auth, asyncMiddleware(async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -43,9 +42,9 @@ router.put("/:id", auth, asyncMiddleware(async (req, res) => {
 
     return res.status(200).send(genre);
   
-}));
+});
 
-router.delete("/:id", [auth, admin], asyncMiddleware(async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const _id = req.params.id;
 
     const genre = await Genre.findByIdAndRemove(_id);
@@ -53,9 +52,9 @@ router.delete("/:id", [auth, admin], asyncMiddleware(async (req, res) => {
 
     return res.status(200).send(genre);
   
-}));
+});
 
-router.get("/:id", asyncMiddleware(async (req, res) => {
+router.get("/:id", async (req, res) => {
   const _id = req.params.id;
 
     const genre = await Genre.findById(_id);
@@ -63,6 +62,6 @@ router.get("/:id", asyncMiddleware(async (req, res) => {
       return res.status(404).send("The genre with the given ID was not found.");
     return res.status(200).send(genre);
   
-}));
+});
 
 module.exports = router;
