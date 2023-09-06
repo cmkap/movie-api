@@ -3,13 +3,15 @@ const express = require("express");
 const { User } = require("../model/user");
 const router = express.Router();
 const Joi = require("joi");
+const asyncMiddleware = require("../middleware/asyncMiddleware(async");
+
 
 const schema = Joi.object({
   email: Joi.string().min(5).max(255).required().email(),
   password: Joi.string().min(5).max(255).required(),
 });
 
-router.post("/", async (req, res) => {
+router.post("/", asyncMiddleware(async (req, res) => {
   const { value, error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -22,6 +24,6 @@ router.post("/", async (req, res) => {
   const token = user.generateAuthToken()
   
   res.send(token);
-});
+}));
 
 module.exports = router;
