@@ -1,5 +1,6 @@
 require('dotenv').config()
 require('express-async-errors')
+const winston = require('winston')
 const Joi = require('joi')
 Joi.objectId = require('joi-objectid')(Joi)
 const mongoose = require('mongoose')
@@ -8,6 +9,9 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const app = express();
+
+
+winston.add(new winston.transports.File({filename:'logfile.log'}))
 
 const logger = require('./middleware/logger')
 const hompage = require("./routes/home");
