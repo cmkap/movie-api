@@ -10,8 +10,14 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const app = express();
 
+process.on('uncaughtException', (ex) => {
+  console.log('WE GOT AN UNCAUGHT EXCEPTION')
+  winston.error(ex.message, ex)
+})
 
 winston.add(new winston.transports.File({filename:'logfile.log'}))
+
+
 
 const logger = require('./middleware/logger')
 const hompage = require("./routes/home");
