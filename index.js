@@ -6,15 +6,14 @@ Joi.objectId = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
 const debug = require("debug")("app:startup");
 const express = require("express");
-const morgan = require("morgan");
-const helmet = require("helmet");
+
 const app = express();
+require('./startup/routes')(app, debug)
 
 process.on("uncaughtException", (ex) => {
   winston.error(ex.message, ex);
   process.exit(1);
 });
-
 
 process.on("uncaughtRejection", (ex) => {
   winston.error(ex.message, ex);
@@ -22,16 +21,6 @@ process.on("uncaughtRejection", (ex) => {
 });
 
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
-
-const logger = require("./middleware/logger");
-const hompage = require("./routes/home");
-const genres = require("./routes/genres");
-const customers = require("./routes/customers");
-const movies = require("./routes/movies");
-const rentals = require("./routes/rentals");
-const users = require("./routes/users");
-const auth = require("./routes/auth");
-const error = require("./middleware/error");
 
 if (!process.env.JWT_PRIVATE_KEY) {
   console.log("FATAL ERROR: jwt private key is not defined");
@@ -48,33 +37,6 @@ mongoose
   .catch((error) => console.error("Error: ", error));
 
 app.set("view engine", "pug");
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-app.use(helmet());
-
-if (app.get("env") === "development") {
-  app.use(morgan("tiny"));
-  debug("Morgan enabled....");
-}
-
-app.use(logger);
-
-app.use(function (req, res, next) {
-  console.log("...Authenticating");
-  next();
-});
-
-app.use("/", hompage);
-app.use("/api/genres", genres);
-app.use("/api/customers", customers);
-app.use("/api/movies", movies);
-app.use("/api/rentals", rentals);
-app.use("/api/users", users);
-app.use("/api/auth", auth);
-
-app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
