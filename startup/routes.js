@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const hompage = require("../routes/home");
@@ -10,8 +10,9 @@ const users = require("../routes/users");
 const auth = require("../routes/auth");
 const error = require("../middleware/error");
 const logger = require("../middleware/logger");
+const debug = require("debug")("app:startup");
 
-module.exports = function (app, debug) {
+module.exports = function (app) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static("public"));
