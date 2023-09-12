@@ -2,6 +2,7 @@ require("dotenv").config();
 const debug = require("debug")("app:startup");
 const express = require("express");
 const app = express();
+const logger = require('./utils/logger')
 
 require('./startup/logging')()
 require('./startup/validation')()
@@ -13,5 +14,5 @@ require('./startup/config')
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  debug(`Listening on port ${port}`);
+  logger.info(`Listening on port ${port}`);
 });

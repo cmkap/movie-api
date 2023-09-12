@@ -1,9 +1,5 @@
-const winston = require("winston");
 const mongoose = require("mongoose");
-
-const logger = winston.createLogger({
-  transports: [new winston.transports.Console()],
-});
+const logger = require('../utils/logger')
 
 module.exports = function () {
   const username = process.env.USERNAME;
