@@ -1,14 +1,13 @@
 require("dotenv").config();
-const debug = require("debug")("app:startup");
 const express = require("express");
 const app = express();
 const logger = require('./utils/logger')
 
 require('./startup/logging')()
 require('./startup/validation')()
-require('./startup/routes')(app, debug)
+require('./startup/routes')(app)
 require('./startup/db')()
-require('./startup/config')
+require('./startup/config')()
 
 // app.set("view engine", "pug");
 
