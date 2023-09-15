@@ -1,6 +1,5 @@
 const request = require("supertest");
 const { Genre } = require("../../models/genre");
-const mongoose = require("mongoose");
 
 let server;
 
@@ -52,4 +51,14 @@ describe("/api/genres", () => {
       expect(res.status).toBe(404);
     });
   });
+
+  describe('POST /', () => {
+    it('should return a 401 if client id not loggen in', async () => {
+        const  res = await request(server)
+            .post('/api/genres')
+            .send({ name: 'genre1'})
+            
+        expect(res.status).toBe(401)
+    })
+  })
 });
