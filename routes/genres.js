@@ -5,6 +5,7 @@ const { Genre, schema } = require("../models/genre");
 
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const { default: mongoose } = require("mongoose");
 
 router.get("/", async (req, res) => {
   const genres = await Genre.find().sort("name").select("name");
@@ -50,6 +51,9 @@ router.delete("/:id", [auth, admin], async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
+if(!mongoose.Types.ObjectId.isValid(req.params.id))
+  return res.status(404).send("Invalid  ID.");
+
   const _id = req.params.id;
 
   const genre = await Genre.findById(_id);
