@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
-const logger = require('../utils/logger')
+const logger = require("../utils/logger");
 
 module.exports = function () {
-  const username = process.env.USERNAME;
-  const password = process.env.SECRET_KEY;
+  const isTest = process.env.NODE_ENV === "test";
 
-  const uri = `mongodb+srv://${username}:${password}@cluster0.xe4jeek.mongodb.net/movie?retryWrites=true&w=majority`;
+  const uri = isTest ? process.env.MONGO_TEST_URI : process.env.MONGO_DEV_URI;
 
   mongoose
     .connect(uri)
-    .then(logger.log({ level: "info", message: "Connected to MongoDB" }));
+    .then(logger.log({ level: "info", message: `Connected to ${uri}` }));
 };
