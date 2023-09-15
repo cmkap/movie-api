@@ -8,5 +8,5 @@ module.exports = function () {
 
   mongoose
     .connect(uri)
-    .then(logger.log({ level: "info", message: `Connected to ${uri}` }));
+    .then(logger.log({ level: "info", message: `Connected to ${uri}...` }));
 };
