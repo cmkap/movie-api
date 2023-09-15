@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const { Rental, schema } = require("../model/rental");
-const { Customer } = require("../model/customer");
-const { Movie } = require("../model/movie");
+const { Rental, schema } = require("../models/rental");
+const { Customer } = require("../models/customer");
+const { Movie } = require("../models/movie");
 const auth = require("../middleware/auth");
 
 router.get("/", async (req, res) => {

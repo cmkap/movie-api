@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { Movie, schema } = require("../model/movie");
-const { Genre } = require("../model/genre");
+const { Movie, schema } = require("../models/movie");
+const { Genre } = require("../models/genre");
 const auth = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
