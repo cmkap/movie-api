@@ -46,31 +46,64 @@ describe("/api/genres", () => {
     });
 
     it("should return a 404 if invalid id is passed", async () => {
-     
       const res = await request(server).get("/api/genres/1");
 
       expect(res.status).toBe(404);
     });
   });
 
-  describe('POST /', () => {
-    it('should return a 401 if client id not loggen in', async () => {
-        const  res = await request(server)
-            .post('/api/genres')
-            .send({ name: 'genre1'})
-            
-        expect(res.status).toBe(401)
-    })
+  describe("POST /", () => {
+    it("should return a 401 if client id not loggen in", async () => {
+      const res = await request(server)
+        .post("/api/genres")
+        .send({ name: "genre1" });
 
-    it('should return a 400 if genre is invalid and not a enum', async () => {
-        const token = new User().generateAuthToken();
+      expect(res.status).toBe(401);
+    });
 
-        const  res = await request(server)
-            .post('/api/genres')
-            .set('x-auth-token', token)
-            .send({ name: 'a'})
+    it("should return a 400 if genre is invalid and not a enum", async () => {
+      const token = new User().generateAuthToken();
 
-        expect(res.status).toBe(400)
-    })
-  })
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "a" });
+
+      expect(res.status).toBe(400);
+    });
+
+    it("should save the genre if it is valid", async () => {
+      // Arrange
+      const token = new User().generateAuthToken();
+      
+      console.log(token)
+
+      // Act
+
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "Drama" });
+
+     const genre = await Genre.find({ name: "Drama" });
+
+      // Assert
+      expect(genre).not.toBeNull();
+    });
+
+    it("should return the genre if it is valid", async () => {
+      const token = new User().generateAuthToken();
+
+      const res = await request(server)
+        .post("/api/genres")
+        .set("x-auth-token", token)
+        .send({ name: "Drama" });
+      
+      // seperate test
+      expect(res.status).toBe(201);
+
+      expect(res.body).toHaveProperty('_id')
+      expect(res.body).toHaveProperty('name', 'Drama')
+    });
+  });
 });
