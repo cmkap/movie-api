@@ -53,57 +53,59 @@ describe("/api/genres", () => {
   });
 
   describe("POST /", () => {
-    it("should return a 401 if client id not loggen in", async () => {
-      const res = await request(server)
+    // Define the happy path, and then in each test
+    // we change one parameter that clearly aligns with
+    // the name of the test
+    let token;
+    let name;
+
+    const exec = async () => {
+      
+
+      return await request(server)
         .post("/api/genres")
-        .send({ name: "genre1" });
+        .set("x-auth-token", token)
+        .send({ name });
+    };
+
+    beforeEach(() => {
+      token = new User().generateAuthToken();
+      name = 'Drama'
+    })
+
+    it("should return a 401 if client id not loggen in", async () => {
+      token =''
+      const res = await exec()
 
       expect(res.status).toBe(401);
     });
 
     it("should return a 400 if genre is invalid and not a enum", async () => {
-      const token = new User().generateAuthToken();
-
-      const res = await request(server)
-        .post("/api/genres")
-        .set("x-auth-token", token)
-        .send({ name: "a" });
+      name = 'a'
+      const res = await exec();
 
       expect(res.status).toBe(400);
     });
 
     it("should save the genre if it is valid", async () => {
       // Arrange
-      const token = new User().generateAuthToken();
-      
-      console.log(token)
-
       // Act
+      await exec();
 
-      const res = await request(server)
-        .post("/api/genres")
-        .set("x-auth-token", token)
-        .send({ name: "Drama" });
-
-     const genre = await Genre.find({ name: "Drama" });
+      const genre = await Genre.find({ name: "Drama" });
 
       // Assert
       expect(genre).not.toBeNull();
     });
 
     it("should return the genre if it is valid", async () => {
-      const token = new User().generateAuthToken();
+      const res = await exec();
 
-      const res = await request(server)
-        .post("/api/genres")
-        .set("x-auth-token", token)
-        .send({ name: "Drama" });
-      
       // seperate test
       expect(res.status).toBe(201);
 
-      expect(res.body).toHaveProperty('_id')
-      expect(res.body).toHaveProperty('name', 'Drama')
+      expect(res.body).toHaveProperty("_id");
+      expect(res.body).toHaveProperty("name", "Drama");
     });
   });
 });
