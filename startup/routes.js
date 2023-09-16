@@ -23,12 +23,6 @@ module.exports = function (app) {
     debug("Morgan enabled....");
   }
 
-  app.use(logger);
-
-  app.use(function (req, res, next) {
-    console.log("...Authenticating");
-    next();
-  });
   app.use("/", hompage);
   app.use("/api/genres", genres);
   app.use("/api/customers", customers);
